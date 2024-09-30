@@ -1,0 +1,36 @@
+apiVersion: argoproj.io/v1alpha1
+kind: ApplicationSet
+metadata:
+  name: static-applicationset
+  namespace: argocd
+spec:
+  generators:  # Use static values
+    - git:
+        repoURL: https://github.com/YOUR_USERNAME/helm-charts-testing.git  # Update this line
+        revision: master
+        files:
+          - path: "uat-values.yaml"  # Path to your values file
+
+  template:
+    metadata:
+      name: nahdi-test  # Static application name
+      annotations:
+        alb.ingress.kubernetes.io/group.name: 'nahdi-dev'
+    spec:
+      project: nahdi-sso
+      source:
+        repoURL: https://github.com/YOUR_USERNAME/helm-charts-testing.git  # Update this line
+        targetRevision: master
+        path: nahdi-mw  # Path to the Helm chart directory
+        helm:
+          valueFiles:
+            - uat-values.yaml  # Reference your values file
+      destination:
+        server: 'https://kubernetes.default.svc'
+        namespace: default
+      syncPolicy:
+        automated:
+          prune: true
+          selfHeal: true
+        syncOptions:
+          - CreateNamespace=true

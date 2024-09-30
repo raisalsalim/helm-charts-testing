@@ -1,0 +1,35 @@
+replicaCount: 2  # Number of replicas for the application
+
+image:
+  repository: nginx  # Docker image repository
+  tag: latest  # Docker image tag
+  pullPolicy: IfNotPresent  # Image pull policy
+
+service:
+  enabled: true  # Enable service
+  type: ClusterIP  # Service type (e.g., ClusterIP, NodePort, LoadBalancer)
+  port: 80  # Port on which the service will be exposed
+  targetPort: 80  # Port on the container that the service should forward to
+
+ingress:
+  enabled: false  # Enable ingress for the service
+  # Uncomment below to configure ingress
+  # name: ""
+  # path: /
+  # hosts:
+  #   - host: chart-example.local
+  #     paths:
+  #       - /
+  # annotations: {}
+
+resources:
+  limits:  # Resource limits for the container
+    cpu: "500m"
+    memory: "128Mi"
+  requests:  # Resource requests for the container
+    cpu: "250m"
+    memory: "64Mi"
+
+nodeSelector: {}  # Node selector for pod placement
+tolerations: []  # Tolerations for pod scheduling
+affinity: {}  # Affinity rules for pod scheduling
